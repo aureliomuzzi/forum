@@ -7,12 +7,12 @@ use App\Models\Thread;
 
 class ThreadController extends Controller
 {
-    // private $thread;
+    private $thread;
 
-    // public function __construct(Thread $thread)
-    // {
-    //     $this->thread = $thread;
-    // }
+    public function __construct(Thread $thread)
+    {
+        $this->thread = $thread;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +20,7 @@ class ThreadController extends Controller
      */
     public function index()
     {
-        $threads = Thread::paginate(10);
+        $threads = Thread::orderBy('created_at', 'DESC')->paginate(15);
 
         return view('threads.list', [
             'threads' => $threads,
@@ -62,9 +62,13 @@ class ThreadController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($thread)
     {
-        //
+        $conteudo = $this->thread->whereSlug($thread)->first();
+
+        return view('threads.show', [
+            'thread' => $conteudo,
+        ]);
     }
 
     /**
